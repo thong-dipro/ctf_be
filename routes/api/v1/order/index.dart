@@ -9,12 +9,12 @@ Future<Response> onRequest(RequestContext context) async {
     return _createOrder(context);
   }
   if (context.request.method == HttpMethod.get) {
-    return _getUserProfile(context);
+    return _getAllOrders(context);
   }
   return Response(statusCode: HttpStatus.methodNotAllowed);
 }
 
-Future<Response> _getUserProfile(RequestContext context) async {
+Future<Response> _getAllOrders(RequestContext context) async {
   final orderService = context.read<OrderService>();
   final response = await orderService.getAllOrders();
 
