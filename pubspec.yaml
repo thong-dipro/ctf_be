@@ -23,6 +23,7 @@ dependencies:
   dart_jsonwebtoken: ^2.6.3
   encrypt: ^5.0.1
   uuid: ^3.0.7
+  shelf_cors_headers: ^0.1.5
 
 dev_dependencies:
   mocktail: ^0.3.0
