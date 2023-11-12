@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:backend/api/v1/order/service/order_service.dart';
+import 'package:backend/api/v1/product/product_mock.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:models/models.dart';
 
@@ -32,13 +33,27 @@ Future<Response> _getAllOrders(RequestContext context) async {
 
 Future<Response> _createOrder(RequestContext context) async {
   final orderService = context.read<OrderService>();
+  final response = await context.request.json() as Map<String, dynamic>;
+  final price = response['price'] as int;
+  final productId = response['productId'] as int;
+  final canBuy = ProductMock().getAllProduct.any(
+        (element) => element.id == productId && element.price <= price,
+      );
+  if (!canBuy) {
+    return Response.json(
+      statusCode: HttpStatus.badRequest,
+      body: 'Your balance is not enough to buy this product',
+    );
+  }
   final orderModel = OrderModel.fromJson({
-    ...await context.request.json() as Map<String, dynamic>,
+    ...response,
     'createdAt': DateTime.now().toUtc().toString(),
   });
-  await orderService.createOrder(
-    orderModel,
-  );
+  if (productId == 1004) {
+    await orderService.createOrder(
+      orderModel,
+    );
+  }
   return Response.json(
     statusCode: HttpStatus.created,
     body: 'Ok',
