@@ -39,6 +39,8 @@ Future<Response> _createOrder(RequestContext context) async {
   final canBuy = ProductMock().getAllProduct.any(
         (element) => element.id == productId && element.price <= price,
       );
+  print(price);
+  print(productId);
   if (!canBuy) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
